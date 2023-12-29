@@ -1,15 +1,17 @@
 package tasks;
 
+import java.util.Objects;
+
 public class Task {
     private String name;
     private String description;
     private int id;
     private Status status;
 
-    public Task(String name, String description, Status status) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = status;
+        this.status = Status.NEW;
     }
 
     //Конструктор для обновления задачи с верным идентификатором
@@ -18,12 +20,6 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-    }
-
-    //Конструткор для создания эпика
-    public Task(String name, String description) {
-        this.name = name;
-        this.description = description;
     }
 
     public Status getStatus() {
@@ -63,16 +59,8 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return getId() == task.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 17;
-        if (getId() != 0) {
-            hash = hash * 31;
-        }
-        return hash;
+        return id == task.id && Objects.equals(name, task.name) &&
+                Objects.equals(description, task.description) && status == task.status;
     }
 
     @Override

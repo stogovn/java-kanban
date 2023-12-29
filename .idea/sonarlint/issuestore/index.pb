@@ -5,8 +5,6 @@
 src/Main.java,9\2\924f089edb4af5ee45c8a9d1129cd28e2b368138
 ?
 java-kanban.iml,d\f\df5dcbbd3f931c7c23855ccec11732ab4c8544f2
-D
-src/TaskManager.java,9\b\9b8f132576a374eb386e9a71798557962c27e297
 E
 src/Tasks/Status.java,9\b\9b9190c321a042a4aed4cb2d8ed8e7a533f5a0f3
 E

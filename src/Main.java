@@ -6,8 +6,8 @@ public class Main {
     public static void main(String[] args) {
         TaskManager manager = new TaskManager();
         //Создаём объекты для задач:
-        Task task1 = new Task("Погладить кота", "Лютик", Status.NEW);
-        Task task2 = new Task("Поиграть с кошкой", "с Лёпой", Status.NEW);
+        Task task1 = new Task("Погладить кота", "Лютик");
+        Task task2 = new Task("Поиграть с кошкой", "с Лёпой");
         //Создаём сами задачи:
         manager.addTask(task1);//ID=1
         manager.addTask(task2);//ID=2
@@ -18,12 +18,9 @@ public class Main {
         manager.addEpic(epic1);//ID=3
         manager.addEpic(epic2);//ID=4
         //Создаём объекты для подзадач:
-        Subtask sub1Epic1 = new Subtask("Сварить овощи", "Морковь и картофель",
-                Status.NEW, epic1.getId());
-        Subtask sub2Epic1 = new Subtask("Сварить яйца", "Яйца вкрутую",
-                Status.NEW, epic1.getId());
-        Subtask sub1Epic2 = new Subtask("Помыть полы", "Два раза, а не один!",
-                Status.NEW, epic2.getId());
+        Subtask sub1Epic1 = new Subtask("Сварить овощи", "Морковь и картофель", epic1.getId());
+        Subtask sub2Epic1 = new Subtask("Сварить яйца", "Яйца вкрутую", epic1.getId());
+        Subtask sub1Epic2 = new Subtask("Помыть полы", "Два раза, а не один!", epic2.getId());
         //Создаём сами подзадачи:
         manager.addSubTask(sub1Epic1);//ID=5
         manager.addSubTask(sub2Epic1);//ID=6
@@ -31,6 +28,7 @@ public class Main {
         System.out.println(manager.getTasks());
         System.out.println(manager.getEpics());
         System.out.println(manager.getSubtasks());
+        System.out.println(manager.getSubtasksOfEpic(epic2.getId()));
         //Меняем статус у созданных задач и подзадач:
         manager.updateTask(new Task(task1.getId(),
                 "Погладить кота", "Лютик", Status.IN_PROGRESS));
