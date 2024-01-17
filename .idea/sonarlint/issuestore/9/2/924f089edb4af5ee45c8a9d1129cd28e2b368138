@@ -1,13 +1,16 @@
 
-L	java:S106"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8ğñªË1
-G	java:S106"+Replace this use of System.out by a logger.(çşê8ññªË1
-G	java:S106"+Replace this use of System.out by a logger.(¸ÚÈ¶8ññªË1
-G	java:S106"+Replace this use of System.out by a logger.(™°‘¾8òñªË1
-L	java:S106+"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8òñªË1
-L	java:S106,"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8òñªË1
-G	java:S106-"+Replace this use of System.out by a logger.(çşê8óñªË1
-G	java:S106."+Replace this use of System.out by a logger.(¸ÚÈ¶8óñªË1
-L	java:S1062"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8óñªË1
-L	java:S1063"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8óñªË1
-G	java:S1064"+Replace this use of System.out by a logger.(çşê8óñªË1
-G	java:S1065"+Replace this use of System.out by a logger.(¸ÚÈ¶8æ«Ë1
+L	java:S106"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8Ç®ç½Ñ1
+G	java:S106"+Replace this use of System.out by a logger.(çşê8Ç®ç½Ñ1
+G	java:S106"+Replace this use of System.out by a logger.(¸ÚÈ¶8Ç®ç½Ñ1
+G	java:S106 "+Replace this use of System.out by a logger.(™°‘¾8È®ç½Ñ1
+L	java:S106,"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8É®ç½Ñ1
+L	java:S106-"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8É®ç½Ñ1
+G	java:S106."+Replace this use of System.out by a logger.(çşê8É®ç½Ñ1
+G	java:S106/"+Replace this use of System.out by a logger.(¸ÚÈ¶8É®ç½Ñ1
+L	java:S1060"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8Ê®ç½Ñ1
+G	java:S1069"+Replace this use of System.out by a logger.(±õïÎ8Ê®ç½Ñ1
+L	java:S106;"+Replace this use of System.out by a logger.(å÷´²ûÿÿÿÿ8Ê®ç½Ñ1
+L	java:S106@"+Replace this use of System.out by a logger.(ªÓ¼áşÿÿÿÿ8Ê®ç½Ñ1
+L	java:S106A"+Replace this use of System.out by a logger.(ü Ÿøÿÿÿÿ8€è½Ñ1
+G	java:S106B"+Replace this use of System.out by a logger.(çşê8ü²é½Ñ1
+G	java:S106C"+Replace this use of System.out by a logger.(¸ÚÈ¶8ü­í½Ñ1
