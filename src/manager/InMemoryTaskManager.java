@@ -1,6 +1,5 @@
 package manager;
 
-import org.w3c.dom.ls.LSOutput;
 import tasks.*;
 
 import java.util.ArrayList;
@@ -62,22 +61,31 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskByID(int taskId) {
         Task task = tasks.get(taskId);
-        historyManager.add(task);
-        return task;
+        if (task != null) {
+            historyManager.add(task);
+            return task;
+        }
+        return null;
     }
 
     @Override
     public Subtask getSubTaskByID(int subTaskId) {
         Subtask subtask = subtasks.get(subTaskId);
-        historyManager.add(subtask);
-        return subtask;
+        if(subtask != null) {
+            historyManager.add(subtask);
+            return subtask;
+        }
+        return null;
     }
 
     @Override
     public Epic getEpicByID(int epicId) {
         Epic epic = epics.get(epicId);
-        historyManager.add(epic);
-        return epic;
+        if(epic !=null) {
+            historyManager.add(epic);
+            return epic;
+        }
+        return null;
     }
 
     //Методы для создания задач:
