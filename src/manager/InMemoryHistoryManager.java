@@ -6,18 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private int counter = 0;
+    private final int lastViewedTasks = 10;
     private final List<Task> historyTasks = new ArrayList<>();
 
     @Override
     public void add(Task task) {
-        counter++;
-        int viewedTasks = 10;
-        if (counter <= viewedTasks) {
+        if(task !=null) {
             historyTasks.add(task);
-        } else {
-            historyTasks.add(task);
-            historyTasks.remove(0);
+            if (historyTasks.size() > lastViewedTasks) {
+                historyTasks.remove(0);
+            }
         }
     }
 
