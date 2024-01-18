@@ -13,10 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest {
     TaskManager manager;
+    Epic epic;
 
     @BeforeEach
     void beforeEach() {
         manager = Managers.getDefault();
+        epic = new Epic("Name", "Description");
     }
 
     //проверка, что Subtask нельзя обновить с несуществующим ID и ID несущ. эпика
@@ -24,7 +26,6 @@ class InMemoryTaskManagerTest {
     void shouldNotSubtaskBeEpic() {
         int idNotExistEpic = -2;
         int idNotExistSubtask = -3;
-        Epic epic = new Epic("Name", "Description");
         manager.createEpic(epic);
         Subtask subtask = new Subtask("Name", "Description", epic.getId());
         manager.createSubTask(subtask);
@@ -38,7 +39,6 @@ class InMemoryTaskManagerTest {
     //проверка, что Subtask нельзя добавить несуществующий Эпик
     @Test
     void shouldNotBeAddEpicInEpic() {
-        Epic epic = new Epic("Name", "Description");
         manager.createEpic(epic);
         int idNotExistEpic = -1;
         Subtask subtask = new Subtask("Name", "Description", idNotExistEpic);
@@ -49,7 +49,6 @@ class InMemoryTaskManagerTest {
     //проверка, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id
     @Test
     void shouldBeAddDifferentTask() {
-        Epic epic = new Epic("Name", "Description");
         manager.createEpic(epic);
         Task task = new Task("Name", "Description");
         manager.createTask(task);
