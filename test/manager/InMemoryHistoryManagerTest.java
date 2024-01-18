@@ -8,9 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryHistoryManagerTest {
     HistoryManager historyManager;
+    TaskManager manager;
+    Task task;
+
     @BeforeEach
     void beforeEach() {
         historyManager = Managers.getDefaultHistory();
+        manager = Managers.getDefault();
+        task = new Task("Name", "Description");
     }
 
     //проверка, что задачи, добавляемые в HistoryManager, сохраняют предыдущую версию задачи и её данных.
@@ -29,10 +34,21 @@ class InMemoryHistoryManagerTest {
     public void shouldBe10TasksInHistory() {
         int expectedTasks = 10;
         for (int i = 0; i <= 13; i++) {
-            Task task = new Task("Name", "Description");
             historyManager.add(task);
         }
-        assertEquals(expectedTasks,historyManager.getHistory().size(),"Задач больше 10");
+        assertEquals(expectedTasks, historyManager.getHistory().size(), "Задач больше 10");
+    }
+    
+    //Проверка, что в историю не записывается null
+    @Test
+    void shouldNotAddTaskInHistoryIfTaskIsNull() {
+        int idNotExist = -4;
+        historyManager.add(null);
+        manager.getTaskByID(idNotExist);
+        manager.getEpicByID(idNotExist);
+        manager.getSubTaskByID(idNotExist);
+        int expectedTasks = 0;
+        assertEquals(expectedTasks, historyManager.getHistory().size(), "Null записался в историю просмотров");
     }
 
 }
