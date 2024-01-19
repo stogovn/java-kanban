@@ -14,11 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class InMemoryTaskManagerTest {
     TaskManager manager;
     Epic epic;
+    Subtask subtask;
 
     @BeforeEach
     void beforeEach() {
         manager = Managers.getDefault();
         epic = new Epic("Name", "Description");
+        manager.createEpic(epic);
+        subtask = new Subtask("Name", "Description", epic.getId());
+        manager.createSubTask(subtask);
     }
 
     //проверка, что Subtask нельзя обновить с несуществующим ID и ID несущ. эпика
@@ -26,9 +30,6 @@ class InMemoryTaskManagerTest {
     void shouldNotSubtaskBeEpic() {
         int idNotExistEpic = -2;
         int idNotExistSubtask = -3;
-        manager.createEpic(epic);
-        Subtask subtask = new Subtask("Name", "Description", epic.getId());
-        manager.createSubTask(subtask);
         Subtask epicSubtask = new Subtask(idNotExistSubtask, "Name", "Description", Status.DONE, idNotExistEpic);
         manager.updateSubtask(epicSubtask);
         assertFalse(epic.getIdSubtasks().contains(epicSubtask.getId()));
@@ -39,7 +40,6 @@ class InMemoryTaskManagerTest {
     //проверка, что Subtask нельзя добавить несуществующий Эпик
     @Test
     void shouldNotBeAddEpicInEpic() {
-        manager.createEpic(epic);
         int idNotExistEpic = -1;
         Subtask subtask = new Subtask("Name", "Description", idNotExistEpic);
         manager.createSubTask(subtask);
@@ -49,11 +49,8 @@ class InMemoryTaskManagerTest {
     //проверка, что InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id
     @Test
     void shouldBeAddDifferentTask() {
-        manager.createEpic(epic);
         Task task = new Task("Name", "Description");
         manager.createTask(task);
-        Subtask subtask = new Subtask("Name", "Description", epic.getId());
-        manager.createSubTask(subtask);
         assertNotEquals(epic, task, "Эпик и задача одинаковые");
         assertNotEquals(task, subtask, "Задача и подзадача одинаковые");
         assertEquals(manager.getTaskByID(task.getId()), task, "Найдена другая задача");
