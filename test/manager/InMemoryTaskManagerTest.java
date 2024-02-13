@@ -57,4 +57,12 @@ class InMemoryTaskManagerTest {
         assertEquals(manager.getEpicByID(epic.getId()), epic, "Найден другой эпик");
         assertEquals(manager.getSubTaskByID(subtask.getId()), subtask, "Найдена другая подзадача");
     }
+
+    //проверка, что у эпика, после удаления подзадачи, не остаются id подзадач
+    @Test
+    void shouldNotBeIdSubtasksAfterDeleteSubtaskOfEpic() {
+            int idSubtaskForCheck = subtask.getId();
+            manager.deleteSubtask(subtask.getId());
+            assertFalse(epic.getIdSubtasks().contains(idSubtaskForCheck), "Эпик не удалил id");
+    }
 }
