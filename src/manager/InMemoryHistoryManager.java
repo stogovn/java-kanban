@@ -2,7 +2,10 @@ package manager;
 
 import tasks.Task;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node> historyTasks = new HashMap<>();
@@ -18,21 +21,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.element = data;
             this.next = next;
             this.prev = prev;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Node node = (Node) o;
-            return Objects.equals(element, node.element)
-                    && Objects.equals(next, node.next)
-                    && Objects.equals(prev, node.prev);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(element, next, prev);
         }
     }
 
@@ -92,7 +80,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             } else {
                 next.prev = prev;
             }
+            historyTasks.remove(node.element.getId());
         }
-        historyTasks.entrySet().removeIf(entry -> entry.getValue().equals(node));
     }
 }
