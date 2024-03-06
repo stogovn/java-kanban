@@ -7,11 +7,13 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    private TypesTask type;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+        this.type = TypesTask.TASK;
     }
 
     //Конструктор для обновления задачи с верным идентификатором
@@ -20,6 +22,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.type = TypesTask.TASK;
     }
 
     public Status getStatus() {
@@ -32,6 +35,12 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+    public TypesTask getType() {
+        return type;
+    }
+    public void setTypesTask(TypesTask type) {
+        this.type = type;
     }
 
     public void setName(String name) {
@@ -65,10 +74,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                '\'' + getName() + '\'' +
-                ", ID=" + getId() +
-                ", " + getStatus() +
-                '}';
+        return getId()+","+getType()+","+getName()+","+getStatus()+","+getDescription()+",";
     }
 }

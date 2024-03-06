@@ -37,3 +37,11 @@ N
 test/manager/ManagersTest.java,5\2\52153b2f0437123500e8c330282c6c755957bce1
 \
 ,test/manager/InMemoryHistoryManagerTest.java,4\7\4794d0970526a03c67ccd4d2f8da25e25d99011b
+V
+&src/manager/FileBackedTaskManager.java,b\1\b17764e4210f59ca78947af66953d6e6a432e7e1
+U
+%src/manager/ManagerSaveException.java,b\2\b207fff14adeedd30ee8889e9bef0a17154e881c
+[
++test/manager/FileBackedTaskManagerTest.java,1\4\14389555cd835c7f7d0f9ec5b25f764a27b89a9f
+H
+src/tasks/TypesTask.java,c\2\c291b306942f25d9de944b9b1deb89e47821ada3

@@ -1,0 +1,6 @@
+
+i
+java:S1301è"KReplace this "switch" statement by "if" statements to increase readability.(ÜŸ•8şâğŸá1
+o
+java:S2677§"LUse or store the value returned from "readLine" instead of throwing it away.(£­—âÿÿÿÿÿ8ÃãğŸá1
+?	java:S131è""Add a default case to this switch.(ÜŸ•8ÈãğŸá1
