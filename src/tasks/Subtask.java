@@ -7,13 +7,15 @@ public class Subtask extends Task {
         super(name, description);
         super.setStatus(Status.NEW);
         this.idFromEpic = idFromEpic;
-        super.setTypesTask(TypesTask.SUBTASK);
     }
 
     public Subtask(int id, String name, String description, Status status, int idFromEpic) {
         super(id, name, description, status);
         this.idFromEpic = idFromEpic;
-        super.setTypesTask(TypesTask.SUBTASK);
+    }
+
+    public TypesTask getType() {
+        return TypesTask.SUBTASK;
     }
 
     public int getIdFromEpic() {

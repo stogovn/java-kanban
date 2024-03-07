@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int counter = 0;
+    protected int counter = 0;
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
     //Хранение задач всех типов в коллекциях HashMap:
     protected final HashMap<Integer, Task> tasks = new HashMap<>();

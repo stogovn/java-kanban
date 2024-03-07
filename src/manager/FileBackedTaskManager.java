@@ -1,7 +1,6 @@
 package manager;
 
 import tasks.Epic;
-import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -10,10 +9,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+import static manager.StringFormatter.fromString;
+import static manager.StringFormatter.historyFromString;
+import static manager.StringFormatter.historyToString;
+
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File fileBacked;
 
     public FileBackedTaskManager(File fileBacked) {
@@ -169,13 +171,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 Task task = fromString(line);
                 switch (task.getType()) {
                     case TASK:
-                        taskManager.createTask(task);
+                        taskManager.tasks.put(task.getId(), task);
+                        taskManager.counter++;
                         break;
                     case SUBTASK:
-                        taskManager.createSubTask((Subtask) task);
+                        Subtask subtask = (Subtask) task;
+                        taskManager.subtasks.put(subtask.getId(), subtask);
+                        taskManager.counter++;
+                        Epic e = taskManager.epics.get(subtask.getIdFromEpic());
+                        e.getIdSubtasks().add(subtask.getId());
                         break;
                     case EPIC:
-                        taskManager.createEpic((Epic) task);
+                        Epic epic = (Epic) task;
+                        taskManager.epics.put(epic.getId(),epic);
+                        taskManager.counter++;
                         break;
                 }
 
@@ -200,44 +209,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return taskManager;
     }
 
-    private static String historyToString(HistoryManager manager) {
-        List<Task> history = manager.getHistory();
-        String[] strings = new String[history.size()];
-        for (int i = 0; i < strings.length; i++) {
-            strings[i] = String.valueOf(history.get(i).getId());
-        }
-        return String.join(", ", strings);
-    }
 
-    private static List<Integer> historyFromString(String value) {
-        List<Integer> history = new ArrayList<>();
-        String[] parts = value.split(",");
-        for (String part : parts) {
-            history.add(Integer.parseInt(part.trim()));
-        }
-        return history;
-    }
-
-    private static Task fromString(String value) {
-        int epic = 0;
-        String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String type = parts[1];
-        String name = parts[2];
-        Status status = Status.valueOf(parts[3]);
-        String description = parts[4];
-        if (parts.length == 6) {
-            epic = Integer.parseInt(parts[5]);
-        }
-        switch (type) {
-            case "EPIC":
-                Epic e = new Epic(name, description);
-                e.setId(id);
-                e.setStatus(status);
-                return e;
-            case "SUBTASK":
-                return new Subtask(id, name, description, status, epic);
-        }
-        return new Task(id, name, description, status);
-    }
 }

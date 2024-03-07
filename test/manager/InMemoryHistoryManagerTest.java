@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import tasks.Task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class InMemoryHistoryManagerTest {
     HistoryManager historyManager;
@@ -63,14 +63,14 @@ class InMemoryHistoryManagerTest {
         //Удаляем первый элемент
         historyManager.remove(t1.getId());
         // Проверяем, что элемент удален
-        assertNull(searchTask(t1));
+        assertFalse(searchTask(t1));
         // Проверяем, что новая голова соответствует следующему элементу
         Task newHead = historyManager.getHistory().getFirst();
         assertEquals(t2, newHead);
         //Удаляем элемент из середины
         historyManager.remove(t3.getId());
         // Проверяем, что элемент удален
-        assertNull(searchTask(t3));
+        assertFalse(searchTask(t3));
         // Проверяем, что ссылки соседних элементов обновились корректно
         Task taskBeforeRemoved = historyManager.getHistory().get(0);
         Task taskAfterRemoved = historyManager.getHistory().get(1);
@@ -79,19 +79,14 @@ class InMemoryHistoryManagerTest {
         //Удаляем последний элемент
         historyManager.remove(t5.getId());
         // Проверяем, что элемент удален
-        assertNull(searchTask(t5));
+        assertFalse(searchTask(t5));
         // Проверяем, что новый хвост соответствует предыдущему элементу
         Task newTail = historyManager.getHistory().getLast();
         assertEquals(t4, newTail);
 
     }
     //Добавим метод поиска элемента для теста
-    public Task searchTask (Task task){
-        for(Task el: historyManager.getHistory()){
-            if(el.equals(task)){
-                return el;
-            }
-        }
-        return null;
+    public boolean searchTask (Task task){
+        return historyManager.getHistory().contains(task);
     }
 }
