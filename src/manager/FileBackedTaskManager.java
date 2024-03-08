@@ -17,6 +17,7 @@ import static manager.StringFormatter.historyToString;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File fileBacked;
+    private static int fileCounter = 0;
 
     public FileBackedTaskManager(File fileBacked) {
         super();
@@ -172,23 +173,30 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 switch (task.getType()) {
                     case TASK:
                         taskManager.tasks.put(task.getId(), task);
-                        taskManager.counter++;
+                        if (task.getId() > fileCounter) {
+                            fileCounter = task.getId();
+                        }
                         break;
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
                         taskManager.subtasks.put(subtask.getId(), subtask);
-                        taskManager.counter++;
+                        if (subtask.getId() > fileCounter) {
+                            fileCounter = subtask.getId();
+                        }
                         Epic e = taskManager.epics.get(subtask.getIdFromEpic());
                         e.getIdSubtasks().add(subtask.getId());
                         break;
                     case EPIC:
                         Epic epic = (Epic) task;
-                        taskManager.epics.put(epic.getId(),epic);
-                        taskManager.counter++;
+                        taskManager.epics.put(epic.getId(), epic);
+                        if (epic.getId() > fileCounter) {
+                            fileCounter = epic.getId();
+                        }
                         break;
                 }
 
             }
+            taskManager.counter = fileCounter;
             String historyLine;
             if ((historyLine = reader.readLine()) != null) {
                 List<Integer> history = historyFromString(historyLine);
