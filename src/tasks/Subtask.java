@@ -14,6 +14,10 @@ public class Subtask extends Task {
         this.idFromEpic = idFromEpic;
     }
 
+    public TypesTask getType() {
+        return TypesTask.SUBTASK;
+    }
+
     public int getIdFromEpic() {
         return idFromEpic;
     }
@@ -29,12 +33,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
-                '\'' + getName() + '\'' +
-                ", ID=" + getId() +
-                ", EpicID=" + getIdFromEpic() +
-                ", " + getStatus() +
-                '}';
+        return getId()+","+getType()+","+getName()+","+getStatus()+","+getDescription()+","+getIdFromEpic();
     }
 
 }

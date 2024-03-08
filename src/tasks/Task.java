@@ -33,6 +33,9 @@ public class Task {
     public String getName() {
         return name;
     }
+    public TypesTask getType() {
+        return TypesTask.TASK;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -65,10 +68,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                '\'' + getName() + '\'' +
-                ", ID=" + getId() +
-                ", " + getStatus() +
-                '}';
+        return getId()+","+getType()+","+getName()+","+getStatus()+","+getDescription()+",";
     }
 }

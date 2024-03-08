@@ -12,6 +12,10 @@ public class Epic extends Task {
         idSubtasks = new ArrayList<>();
     }
 
+    public TypesTask getType() {
+        return TypesTask.EPIC;
+    }
+
     public ArrayList<Integer> getIdSubtasks() {
         return idSubtasks;
     }
@@ -27,12 +31,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                '\'' + getName() + '\'' +
-                ", ID=" + getId() +
-                ", subID=" + getIdSubtasks() +
-                ", " + getStatus() +
-                '}';
+        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDescription() + ",";
     }
 
 }

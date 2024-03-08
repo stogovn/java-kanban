@@ -7,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int counter = 0;
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected int counter = 0;
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
     //Хранение задач всех типов в коллекциях HashMap:
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
 
     //Методы для получения списка всех задач:
     @Override
@@ -39,11 +39,17 @@ public class InMemoryTaskManager implements TaskManager {
     //Методы для удаления всех задач:
     @Override
     public void deleteTasks() {
+        for (Task task : tasks.values()) {
+            historyManager.remove(task.getId());
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteSubTasks() {
+        for (Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getId());
+        }
         subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.getIdSubtasks().clear();
@@ -53,6 +59,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpics() {
+        for (Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getId());
+        }
+        for (Epic epic : epics.values()) {
+            historyManager.remove(epic.getId());
+        }
         epics.clear();
         subtasks.clear();
     }
@@ -61,31 +73,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskByID(int taskId) {
         Task task = tasks.get(taskId);
-        if (task != null) {
-            historyManager.add(task);
-            return task;
-        }
-        return null;
+        historyManager.add(task);
+        return task;
     }
 
     @Override
     public Subtask getSubTaskByID(int subTaskId) {
         Subtask subtask = subtasks.get(subTaskId);
-        if(subtask != null) {
-            historyManager.add(subtask);
-            return subtask;
-        }
-        return null;
+        historyManager.add(subtask);
+        return subtask;
     }
 
     @Override
     public Epic getEpicByID(int epicId) {
         Epic epic = epics.get(epicId);
-        if(epic !=null) {
-            historyManager.add(epic);
-            return epic;
-        }
-        return null;
+        historyManager.add(epic);
+        return epic;
     }
 
     //Методы для создания задач:
@@ -164,6 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTask(int id) {
         tasks.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
@@ -172,6 +176,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getIdFromEpic());
         epic.getIdSubtasks().remove(id);
         updateEpicStatus(epic);
+        historyManager.remove(id);
     }
 
     @Override
@@ -180,8 +185,10 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(id);
         for (int idSub : epic.getIdSubtasks()) {
             subtasks.remove(idSub);
+            historyManager.remove(idSub);
         }
         epics.remove(id);
+        historyManager.remove(id);
     }
 
     //Метод получения списка всех подзадач определенного эпика
