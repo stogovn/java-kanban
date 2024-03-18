@@ -6,6 +6,9 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TypesTask;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,7 @@ public class StringFormatter {
     }
 
     static Task fromString(String value) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         int epic = 0;
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
@@ -36,18 +40,22 @@ public class StringFormatter {
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
-        if (parts.length == 6) {
-            epic = Integer.parseInt(parts[5]);
+        if (parts.length == 8) {
+            epic = Integer.parseInt(parts[7]);
         }
+        LocalDateTime startTime = LocalDateTime.parse(parts[5], formatter);
+        Duration duration = Duration.ofMinutes(Long.parseLong(parts[6]));
         switch (type) {
             case EPIC:
                 Epic e = new Epic(name, description);
                 e.setId(id);
                 e.setStatus(status);
+                e.setStartTime(startTime);
+                e.setDuration(duration);
                 return e;
             case SUBTASK:
-                return new Subtask(id, name, description, status, epic);
+                return new Subtask(id, name, description, status, epic, startTime, duration);
         }
-        return new Task(id, name, description, status);
+        return new Task(id, name, description, status, startTime, duration);
     }
 }

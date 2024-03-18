@@ -1,6 +1,5 @@
 package manager;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -9,31 +8,34 @@ import tasks.Task;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File tmpFile;
-    private FileBackedTaskManager manager;
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
         try {
             tmpFile = File.createTempFile("tasks", ".csv");
             manager = new FileBackedTaskManager(tmpFile);
+            epic = new Epic("Name", "Description");
+            manager.createEpic(epic);
+            subtask = new Subtask("Name", "Description", epic.getId(),
+                    LocalDateTime.of(2024, Month.MARCH,20,21,30), Duration.ofMinutes(15));
+            manager.createSubTask(subtask);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @AfterEach
-    public void deleteFile() {
-        tmpFile.delete();
-    }
-
     @Test
-    void shouldBeEmptyTaskManagerAfterSaveAndLoad() {
-        manager.save();
+    void shouldBeEmptyTaskManagerAfterSaveAndLoad() throws IOException {
+        tmpFile = File.createTempFile("tasks", ".csv");
+        manager = new FileBackedTaskManager(tmpFile);
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tmpFile);
         assertTrue(loadedManager.getTasks().isEmpty(), "Задач не должно быть в менеджере");
         assertTrue(loadedManager.getEpics().isEmpty(), "Эпиков не должно быть в менеджере");
@@ -43,14 +45,19 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void shouldBeAllTasksInTaskManagerAfterSaveAndLoadMultipleTasks() {
-        Task t1 = new Task("Task1", "Description task1");
-        Task t2 = new Task("Task2", "Description task2");
+    void shouldBeAllTasksInTaskManagerAfterSaveAndLoadMultipleTasks() throws IOException {
+        tmpFile = File.createTempFile("tasks", ".csv");
+        manager = new FileBackedTaskManager(tmpFile);
+        Task t1 = new Task("Task1", "Description task1",
+                LocalDateTime.of(2024, Month.MARCH,21,21,30), Duration.ofMinutes(15));
+        Task t2 = new Task("Task2", "Description task2",
+                LocalDateTime.of(2024, Month.MARCH,22,21,30), Duration.ofMinutes(15));
         manager.createTask(t1);
         manager.createTask(t2);
         Epic e1 = new Epic("Epic1", "Description epic1");
         manager.createEpic(e1);
-        Subtask s1 = new Subtask("Subtask1","Description subtask1",e1.getId());
+        Subtask s1 = new Subtask("Subtask1","Description subtask1",e1.getId(),
+                LocalDateTime.of(2024, Month.MARCH,20,21,30), Duration.ofMinutes(15));
         manager.createSubTask(s1);
         manager.getTaskByID(t1.getId());
         manager.getSubTaskByID(s1.getId());

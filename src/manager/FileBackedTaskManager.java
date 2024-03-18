@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 import static manager.StringFormatter.fromString;
@@ -26,28 +29,35 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static void main(String[] args) {
         TaskManager manager = loadFromFile(new File("resources/tasks.csv"));
-        Task t1 = new Task("Task1", "Description task1");
-        Task t2 = new Task("Task2", "Description task2");
+        Task t1 = new Task("Task1", "Description task1",
+                LocalDateTime.of(2024, Month.MARCH, 14, 21, 30), Duration.ofMinutes(15));
+        Task t2 = new Task("Task2", "Description task2",
+                LocalDateTime.of(2024, Month.MARCH, 14, 21, 45), Duration.ofMinutes(15));
         manager.createTask(t1);
         manager.createTask(t2);
         Epic e1 = new Epic("Epic1", "Description epic1");
         manager.createEpic(e1);
-        Subtask s1 = new Subtask("Subtask1", "Description subtask1", e1.getId());
-        Subtask s2 = new Subtask("Subtask2", "Description subtask2", e1.getId());
-        Subtask s3 = new Subtask("Subtask3", "Description subtask3", e1.getId());
+        Subtask s1 = new Subtask("Subtask1", "Description subtask1", e1.getId(),
+                LocalDateTime.of(2024, Month.MARCH, 13, 21, 30), Duration.ofMinutes(15));
+        Subtask s2 = new Subtask("Subtask2", "Description subtask2", e1.getId(),
+                LocalDateTime.of(2024, Month.MARCH, 13, 21, 45), Duration.ofMinutes(15));
+        Subtask s3 = new Subtask("Subtask3", "Description subtask3", e1.getId(),
+                LocalDateTime.of(2024, Month.MARCH, 11, 22, 0), Duration.ofMinutes(15));
         manager.createSubTask(s1);
         manager.createSubTask(s2);
         manager.createSubTask(s3);
-        Epic e2 = new Epic("Epic2", "Description epic3");
-        manager.createEpic(e2);
         //Просматриваем задачи
-        manager.getEpicByID(e2.getId());
         manager.getTaskByID(t1.getId());
         manager.getSubTaskByID(s1.getId());
         manager.getTaskByID(t2.getId());
         manager.getEpicByID(e1.getId());
         manager.getSubTaskByID(s2.getId());
         manager.getSubTaskByID(s3.getId());
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
     }
 
     @Override
@@ -145,7 +155,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (FileWriter fileWriter = new FileWriter(fileBacked)) {
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,date and time,duration,epic\n");
             for (Task task : getTasks()) {
                 fileWriter.write(task.toString() + "\n");
             }
@@ -173,10 +183,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 switch (task.getType()) {
                     case TASK:
                         taskManager.tasks.put(task.getId(), task);
+                        taskManager.prioritizedTasks.add(task);
                         break;
                     case SUBTASK:
                         Subtask subtask = (Subtask) task;
                         taskManager.subtasks.put(subtask.getId(), subtask);
+                        taskManager.prioritizedTasks.add(subtask);
                         Epic e = taskManager.epics.get(subtask.getIdFromEpic());
                         e.getIdSubtasks().add(subtask.getId());
                         break;
