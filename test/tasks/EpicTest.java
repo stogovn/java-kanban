@@ -32,13 +32,13 @@ class EpicTest {
         Epic epic = new Epic("Name", "Description");
         manager.createEpic(epic);
         Subtask s1 = new Subtask("Name1", "Description1", epic.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 10, 21, 30), Duration.ofMinutes(15));
+                LocalDateTime.of(2024, Month.MARCH, 10, 21, 30), 15);
         Subtask s2 = new Subtask("Name2", "Description2", epic.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 11, 21, 30), Duration.ofMinutes(15));
+                LocalDateTime.of(2024, Month.MARCH, 11, 21, 30), 15);
         Subtask s3 = new Subtask("Name3", "Description3", epic.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 12, 21, 30), Duration.ofMinutes(15));
+                LocalDateTime.of(2024, Month.MARCH, 12, 21, 30), 15);
         Subtask s4 = new Subtask("Name4", "Description4", epic.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 13, 21, 30), Duration.ofMinutes(15));
+                LocalDateTime.of(2024, Month.MARCH, 13, 21, 30), 15);
         manager.createSubTask(s1);
         manager.createSubTask(s2);
         manager.createSubTask(s3);

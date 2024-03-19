@@ -7,7 +7,7 @@ import java.util.Objects;
 public class Epic extends Task {
 
     private final ArrayList<Integer> idSubtasks;
-    private LocalDateTime endTime;
+    private LocalDateTime epicEndTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -22,6 +22,14 @@ public class Epic extends Task {
         return idSubtasks;
     }
 
+    public LocalDateTime getEpicEndTime() {
+        return epicEndTime;
+    }
+
+    public void setEpicEndTime(LocalDateTime epicEndTime) {
+        this.epicEndTime = epicEndTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -33,7 +41,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        String formattedDateTime = getStartTime().format(FORMATTER);
+        String formattedDateTime = getStartTime() != null ? getStartTime().format(FORMATTER) : "";
         return getId() + "," +
                 getType() + "," +
                 getName() + "," +

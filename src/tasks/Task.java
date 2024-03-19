@@ -10,7 +10,7 @@ public class Task{
     private String description;
     private int id;
     private Status status;
-    private Duration duration;
+    private long duration;
     private LocalDateTime startTime;
     protected final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
@@ -18,33 +18,29 @@ public class Task{
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
-        this.duration = Duration.ofMinutes(0);
-        this.startTime = LocalDateTime.of(1,1,1,1,1);
     }
 
-    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
-        this.name = name;
-        this.description = description;
+    public Task(String name, String description, LocalDateTime startTime, long duration) {
+        this(name,description);
         this.status = Status.NEW;
         this.startTime = startTime;
         this.duration = duration;
     }
 
     //Конструктор для обновления задачи с верным идентификатором
-    public Task(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration) {
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, long duration) {
+        this(name,description);
         this.id = id;
-        this.name = name;
-        this.description = description;
         this.status = status;
         this.duration = duration;
         this.startTime = startTime;
     }
 
     public Duration getDuration() {
-        return duration;
+        return Duration.ofMinutes(duration);
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -57,7 +53,7 @@ public class Task{
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration);
+        return startTime.plus(getDuration());
     }
 
     public Status getStatus() {
@@ -108,7 +104,7 @@ public class Task{
 
     @Override
     public String toString() {
-        String formattedDateTime = getStartTime().format(FORMATTER);
+        String formattedDateTime = getStartTime() != null ? getStartTime().format(FORMATTER) : "";
         return getId() + "," +
                 getType() + "," +
                 getName() + "," +

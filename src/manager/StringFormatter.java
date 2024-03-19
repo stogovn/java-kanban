@@ -6,7 +6,6 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TypesTask;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class StringFormatter {
 
     static Task fromString(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        int epic = 0;
+        int epic = -1;
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         TypesTask type = TypesTask.valueOf(parts[1]);
@@ -43,19 +42,36 @@ public class StringFormatter {
         if (parts.length == 8) {
             epic = Integer.parseInt(parts[7]);
         }
-        LocalDateTime startTime = LocalDateTime.parse(parts[5], formatter);
-        Duration duration = Duration.ofMinutes(Long.parseLong(parts[6]));
+        LocalDateTime startTime = null;
+        if (!parts[5].isEmpty()) {
+            startTime = LocalDateTime.parse(parts[5], formatter);
+        }
+        long duration = Long.parseLong(parts[6]);
         switch (type) {
             case EPIC:
-                Epic e = new Epic(name, description);
-                e.setId(id);
-                e.setStatus(status);
-                e.setStartTime(startTime);
-                e.setDuration(duration);
-                return e;
+                Epic epicFromString = new Epic(name, description);
+                epicFromString.setId(id);
+                epicFromString.setStatus(status);
+                if(startTime !=null){
+                    epicFromString.setStartTime(startTime);
+                }
+                epicFromString.setDuration(duration);
+                return epicFromString;
             case SUBTASK:
-                return new Subtask(id, name, description, status, epic, startTime, duration);
+                Subtask subtaskFromString = new Subtask(id, name, description, status, epic);
+                if(startTime !=null){
+                    subtaskFromString.setStartTime(startTime);
+                }
+                subtaskFromString.setDuration(duration);
+                return subtaskFromString;
         }
-        return new Task(id, name, description, status, startTime, duration);
+        Task taskFromString = new Task(name, description);
+        taskFromString.setId(id);
+        taskFromString.setStatus(status);
+        if(startTime !=null){
+            taskFromString.setStartTime(startTime);
+        }
+        taskFromString.setDuration(duration);
+        return taskFromString;
     }
 }

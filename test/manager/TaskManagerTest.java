@@ -6,8 +6,10 @@ import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +19,7 @@ public abstract class TaskManagerTest <T extends TaskManager> {
     protected T manager;
     Epic epic;
     Subtask subtask;
+    File file;
 
     //проверка, что Subtask нельзя обновить с несуществующим ID и ID несущ. эпика
     @Test
@@ -24,7 +27,7 @@ public abstract class TaskManagerTest <T extends TaskManager> {
         int idNotExistEpic = -2;
         int idNotExistSubtask = -3;
         Subtask epicSubtask = new Subtask(idNotExistSubtask, "Name", "Description",
-                Status.DONE, idNotExistEpic,LocalDateTime.now(), Duration.ofMinutes(20));
+                Status.DONE, idNotExistEpic,LocalDateTime.now(), 20);
         manager.updateSubtask(epicSubtask);
         assertFalse(epic.getIdSubtasks().contains(epicSubtask.getId()));
         assertFalse(manager.getSubtasks().contains(epicSubtask));
@@ -35,7 +38,8 @@ public abstract class TaskManagerTest <T extends TaskManager> {
     @Test
     void shouldNotBeAddEpicInEpic() {
         int idNotExistEpic = -1;
-        Subtask subtask = new Subtask("Name", "Description", idNotExistEpic, LocalDateTime.now(), Duration.ofMinutes(20));
+        Subtask subtask = new Subtask("Name", "Description",
+                idNotExistEpic, LocalDateTime.now(), 20);
         manager.createSubTask(subtask);
         assertFalse(epic.getIdSubtasks().contains(subtask.getId()), "Эпик добавился сам в себя");
     }
