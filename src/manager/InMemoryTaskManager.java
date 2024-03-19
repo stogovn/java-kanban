@@ -200,7 +200,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void updateEpicTimeInformation (Epic epic){//
+    private void updateEpicTimeInformation(Epic epic) {
         Optional<Subtask> earliestSubtask = epic.getIdSubtasks().stream()
                 .map(subtasks::get)
                 .min(taskComparator);

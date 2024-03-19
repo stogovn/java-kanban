@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public abstract class TaskManagerTest <T extends TaskManager> {
+public abstract class TaskManagerTest<T extends TaskManager> {
     protected T manager;
     Epic epic;
     Subtask subtask;
@@ -27,7 +27,7 @@ public abstract class TaskManagerTest <T extends TaskManager> {
         int idNotExistEpic = -2;
         int idNotExistSubtask = -3;
         Subtask epicSubtask = new Subtask(idNotExistSubtask, "Name", "Description",
-                Status.DONE, idNotExistEpic,LocalDateTime.now(), 20);
+                Status.DONE, idNotExistEpic, LocalDateTime.now(), 20);
         manager.updateSubtask(epicSubtask);
         assertFalse(epic.getIdSubtasks().contains(epicSubtask.getId()));
         assertFalse(manager.getSubtasks().contains(epicSubtask));

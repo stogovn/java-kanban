@@ -52,14 +52,14 @@ public class StringFormatter {
                 Epic epicFromString = new Epic(name, description);
                 epicFromString.setId(id);
                 epicFromString.setStatus(status);
-                if(startTime !=null){
+                if (startTime != null) {
                     epicFromString.setStartTime(startTime);
                 }
                 epicFromString.setDuration(duration);
                 return epicFromString;
             case SUBTASK:
                 Subtask subtaskFromString = new Subtask(id, name, description, status, epic);
-                if(startTime !=null){
+                if (startTime != null) {
                     subtaskFromString.setStartTime(startTime);
                 }
                 subtaskFromString.setDuration(duration);
@@ -68,7 +68,7 @@ public class StringFormatter {
         Task taskFromString = new Task(name, description);
         taskFromString.setId(id);
         taskFromString.setStatus(status);
-        if(startTime !=null){
+        if (startTime != null) {
             taskFromString.setStartTime(startTime);
         }
         taskFromString.setDuration(duration);

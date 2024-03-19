@@ -100,6 +100,7 @@ class InMemoryHistoryManagerTest {
         List<Task> history = historyManager.getHistory();
         assertTrue(history.isEmpty(), "История не пустая");
     }
+
     //Проверка, что история не хранит дубликаты
     @Test
     public void shouldNotBeDuplicateInHistory() {

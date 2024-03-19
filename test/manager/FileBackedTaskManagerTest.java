@@ -95,7 +95,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         //Проверяем, что после выгрузки кол-во задач не изменилось
         assertEquals(5, loadedManager.getPrioritizedTasks().size());
         //Проверяем, что после выгрузки список до и после идентичны
-        assertEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(),"Списка разные");
+        assertEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(), "Списка разные");
         //Обновим подзадачу s1 с новым статусом, датой начала и продолжительностью
         Subtask s1New = new Subtask(s1.getId(), "Subtask1", "Description subtask1", Status.DONE,
                 e1.getId(), LocalDateTime.of(2023, Month.MARCH, 17, 21, 30), 5);
@@ -103,7 +103,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         //Проверяем, что после обновления подзадачи старая удалилась из списка
         assertFalse(loadedManager.getPrioritizedTasks().contains(s1), "Подзадачи не должно быть в списке");
         //Проверяем, что после изменения выгруженного списка они отличаются
-        assertNotEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(),"Списка одинаковые");
+        assertNotEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(), "Списка одинаковые");
 
     }
 }

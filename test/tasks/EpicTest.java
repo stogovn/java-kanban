@@ -44,15 +44,15 @@ class EpicTest {
         manager.createSubTask(s3);
         manager.createSubTask(s4);
         //Все подзадачи со статусом NEW
-        assertEquals(Status.NEW,epic.getStatus(), "Статус эпика должен быть NEW");
+        assertEquals(Status.NEW, epic.getStatus(), "Статус эпика должен быть NEW");
         s1.setStatus(Status.DONE);
         manager.updateSubtask(s1);
         //Подзадачи со статусами NEW и DONE.
-        assertEquals(Status.IN_PROGRESS,epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
+        assertEquals(Status.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
         s2.setStatus(Status.IN_PROGRESS);
         manager.updateSubtask(s2);
         //Подзадачи со статусом IN_PROGRESS
-        assertEquals(Status.IN_PROGRESS,epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
+        assertEquals(Status.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
         s1.setStatus(Status.DONE);
         s2.setStatus(Status.DONE);
         s3.setStatus(Status.DONE);
@@ -62,6 +62,6 @@ class EpicTest {
         manager.updateSubtask(s3);
         manager.updateSubtask(s4);
         //Все подзадачи со статусом DONE.
-        assertEquals(Status.DONE,epic.getStatus(), "Статус эпика должен быть DONE");
+        assertEquals(Status.DONE, epic.getStatus(), "Статус эпика должен быть DONE");
     }
 }

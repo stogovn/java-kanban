@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Task{
+public class Task {
     private String name;
     private String description;
     private int id;
@@ -21,7 +21,7 @@ public class Task{
     }
 
     public Task(String name, String description, LocalDateTime startTime, long duration) {
-        this(name,description);
+        this(name, description);
         this.status = Status.NEW;
         this.startTime = startTime;
         this.duration = duration;
@@ -29,7 +29,7 @@ public class Task{
 
     //Конструктор для обновления задачи с верным идентификатором
     public Task(int id, String name, String description, Status status, LocalDateTime startTime, long duration) {
-        this(name,description);
+        this(name, description);
         this.id = id;
         this.status = status;
         this.duration = duration;

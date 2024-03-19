@@ -6,8 +6,9 @@ import tasks.Task;
 
 import java.util.List;
 
-public interface TaskManager{
+public interface TaskManager {
     List<Task> getPrioritizedTasks();
+
     //Методы для получения списка всех задач:
     List<Task> getTasks();
 
