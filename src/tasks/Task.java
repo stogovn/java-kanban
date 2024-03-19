@@ -12,7 +12,7 @@ public class Task {
     private Status status;
     private long duration;
     private LocalDateTime startTime;
-    protected final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    protected final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public Task(String name, String description) {
         this.name = name;
@@ -104,7 +104,7 @@ public class Task {
 
     @Override
     public String toString() {
-        String formattedDateTime = getStartTime() != null ? getStartTime().format(FORMATTER) : "";
+        String formattedDateTime = getStartTime() != null ? getStartTime().format(dateTimeFormatter) : "";
         return getId() + "," +
                 getType() + "," +
                 getName() + "," +

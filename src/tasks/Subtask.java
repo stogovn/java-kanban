@@ -43,7 +43,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        String formattedDateTime = getStartTime() != null ? getStartTime().format(FORMATTER) : "";
+        String formattedDateTime = getStartTime() != null ? getStartTime().format(dateTimeFormatter) : "";
         return getId() + "," +
                 getType() + "," +
                 getName() + "," +
