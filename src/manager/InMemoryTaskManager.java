@@ -3,7 +3,6 @@ package manager;
 import tasks.*;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -80,14 +79,13 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubTasks() {
         for (Subtask subtask : subtasks.values()) {
             historyManager.remove(subtask.getId());
-            prioritizedTasks.remove(subtask);
+            prioritizedTasks.removeIf(oldSubtask -> oldSubtask.getId() == subtask.getId());
         }
         subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.getIdSubtasks().clear();
             updateEpicStatus(epic);
-            epic.setDuration(0);
-            epic.setStartTime(LocalDateTime.MIN);
+            updateEpicTimeInformation(epic);
         }
     }
 
@@ -95,11 +93,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteEpics() {
         for (Subtask subtask : subtasks.values()) {
             historyManager.remove(subtask.getId());
-            prioritizedTasks.remove(subtask);
         }
         for (Epic epic : epics.values()) {
             historyManager.remove(epic.getId());
-            prioritizedTasks.remove(epic);
         }
         epics.clear();
         subtasks.clear();
@@ -215,11 +211,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setDuration(duration.toMinutes());
     }
 
-    @Override
-    public void updateEpic(Epic epic) {
-        epics.put(epic.getId(), epic);
-    }
-
     private void updateEpicStatus(Epic epic) {
         int countOfNew = 0;
         int countOfDone = 0;
@@ -248,18 +239,19 @@ public class InMemoryTaskManager implements TaskManager {
     //Методы для удаления по идентификатору
     @Override
     public void deleteTask(int id) {
-        prioritizedTasks.remove(tasks.get(id));
+        prioritizedTasks.removeIf(oldTask -> oldTask.getId() == id);
         tasks.remove(id);
         historyManager.remove(id);
     }
 
     @Override
     public void deleteSubtask(Integer id) {
-        prioritizedTasks.remove(subtasks.get(id));
+        prioritizedTasks.removeIf(oldSubtask -> oldSubtask.getId() == id);
         Subtask subtask = subtasks.remove(id);
         Epic epic = epics.get(subtask.getIdFromEpic());
         epic.getIdSubtasks().remove(id);
         updateEpicStatus(epic);
+        updateEpicTimeInformation(epic);
         historyManager.remove(id);
     }
 

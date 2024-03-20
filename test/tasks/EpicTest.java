@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -22,7 +21,6 @@ class EpicTest {
         epic1.setId(idEpic);
         epic2.setId(idEpic);
         assertEquals(epic1, epic2, "Эпики не совпадают.");
-
     }
 
     //Проверка обновления статуса эпика
@@ -63,5 +61,22 @@ class EpicTest {
         manager.updateSubtask(s4);
         //Все подзадачи со статусом DONE.
         assertEquals(Status.DONE, epic.getStatus(), "Статус эпика должен быть DONE");
+    }
+
+    //Проверка расчета времени окончания эпика
+    @Test
+    public void shouldBeCorrectEndTimeInEpic() throws IOException {
+        TaskManager manager = new FileBackedTaskManager(File.createTempFile("tasks", ".csv"));
+        Epic epic = new Epic("Name", "Description");
+        manager.createEpic(epic);
+        //Заранее знаем что окончание эпика будет 22-03-2024 22:44
+        LocalDateTime dateTimeCheck = LocalDateTime.of(2024, Month.MARCH, 20, 22, 59);
+        Subtask s1 = new Subtask("S1", "Description1", epic.getId(),
+                LocalDateTime.of(2024, Month.MARCH, 20, 22, 44), 15);
+        Subtask s2 = new Subtask("S2", "Description2", epic.getId(),
+                LocalDateTime.of(2019, Month.MARCH, 10, 21, 30), 15);
+        manager.createSubTask(s1);
+        manager.createSubTask(s2);
+        assertEquals(dateTimeCheck, manager.getEpicByID(epic.getId()).getEpicEndTime());
     }
 }

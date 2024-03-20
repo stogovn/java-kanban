@@ -44,8 +44,6 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    void updateEpic(Epic epic);
-
     //Методы для удаления по идентификатору
     void deleteTask(int id);
 
