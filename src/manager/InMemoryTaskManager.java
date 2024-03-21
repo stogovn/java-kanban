@@ -2,7 +2,6 @@ package manager;
 
 import tasks.*;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -20,22 +19,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final Set<Task> prioritizedTasks = new TreeSet<>(taskComparator);
 
-    private static Comparator<Task> taskComparator = (task1, task2) -> {
-        if (task1.getStartTime() == null && task2.getStartTime() != null) {
-            return 1;//task1 попадает в конец списка
-        } else if (task1.getStartTime() != null && task2.getStartTime() == null) {
-            return -1;//task2 попадает в конец списка
-        } else if (task1.getStartTime() == null && task2.getStartTime() == null) {
-            return 0;
-        } else {
-            // Если обе задачи со стартом, сортируем по стартовому времени
-            if (task1.getStartTime().isBefore(task2.getStartTime())) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-    };
+    private static final Comparator<Task> taskComparator = Comparator.nullsLast(
+            Comparator.comparing(Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())));
 
     @Override
 
@@ -126,12 +111,11 @@ public class InMemoryTaskManager implements TaskManager {
     //Методы для создания задач:
     @Override
     public void createTask(Task task) {
-        counter++;
         if (prioritizedTasks.stream().anyMatch(t -> timeCrossing(t, task))) {
-            counter--;
             System.out.println("Задачи пересекаются, задайте другое время");
             return;
         }
+        counter++;
         task.setId(counter);
         tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
@@ -142,13 +126,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epics.containsKey(subtask.getIdFromEpic())) {
             return;
         }
-        counter++;
         Epic epic = epics.get(subtask.getIdFromEpic());
         if (prioritizedTasks.stream().anyMatch(t -> timeCrossing(t, subtask))) {
-            counter--;
             System.out.println("Подзадачи пересекаются, задайте другое время");
             return;
         }
+        counter++;
         subtask.setId(counter);
         subtasks.put(subtask.getId(), subtask);
         prioritizedTasks.add(subtask);
@@ -205,10 +188,10 @@ public class InMemoryTaskManager implements TaskManager {
                 .map(subtasks::get)
                 .max(taskComparator);
         latestSubtask.ifPresent(subtask -> epic.setEpicEndTime(subtask.getEndTime()));
-        Duration duration = epic.getIdSubtasks().stream()
+        long duration = epic.getIdSubtasks().stream()
                 .map(id -> subtasks.get(id).getDuration())
-                .reduce(Duration.ZERO, Duration::plus);
-        epic.setDuration(duration.toMinutes());
+                .reduce(0L, Long::sum);
+        epic.setDuration(duration);
     }
 
     private void updateEpicStatus(Epic epic) {

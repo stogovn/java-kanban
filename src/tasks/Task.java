@@ -1,6 +1,5 @@
 package tasks;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -36,8 +35,8 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public Duration getDuration() {
-        return Duration.ofMinutes(duration);
+    public long getDuration() {
+        return duration;
     }
 
     public void setDuration(long duration) {
@@ -53,7 +52,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(getDuration());
+        return startTime.plusMinutes(duration);
     }
 
     public Status getStatus() {
@@ -98,19 +97,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) && status == task.status;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status;
     }
 
     @Override
     public String toString() {
         String formattedDateTime = getStartTime() != null ? getStartTime().format(dateTimeFormatter) : "";
-        return getId() + "," +
-                getType() + "," +
-                getName() + "," +
-                getStatus() + "," +
-                getDescription() + "," +
-                formattedDateTime + "," +
-                getDuration().toMinutes();
+        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDescription() + "," + formattedDateTime + "," + getDuration();
     }
 }

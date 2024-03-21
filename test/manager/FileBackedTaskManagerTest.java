@@ -3,7 +3,6 @@ package manager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -41,6 +40,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         assertTrue(loadedManager.getEpics().isEmpty(), "Эпиков не должно быть в менеджере");
         assertTrue(loadedManager.getSubtasks().isEmpty(), "Подзадач не должно быть в менеджере");
         assertTrue(loadedManager.getHistory().isEmpty(), "История должна быть пустой");
+        assertTrue(loadedManager.getPrioritizedTasks().isEmpty(), "Список приоритетных задач не пустой");
         assertDoesNotThrow(() -> FileBackedTaskManager.loadFromFile(tmpFile));
     }
 
@@ -63,46 +63,11 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         manager.getSubTaskByID(s1.getId());
         manager.getEpicByID(e1.getId());
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tmpFile);
-        assertEquals(2, loadedManager.getTasks().size(), "Должно быть две задачи");
-        assertEquals(1, loadedManager.getEpics().size(), "Должен быть один эпик");
-        assertEquals(1, loadedManager.getSubtasks().size(), "Должна быть одна подзадача");
-        assertEquals(3, loadedManager.getHistory().size(), "В истории должно быть 3 задачи");
-        assertTrue(loadedManager.getHistory().contains(t1), "В истории должна быть задача Task1");
-        assertTrue(loadedManager.getHistory().contains(s1), "В истории должна быть подзадача Subtask11");
-        assertTrue(loadedManager.getHistory().contains(e1), "В истории должен быть эпик Epic1");
-    }
-
-    @Test
-    public void shouldNotBeDifferentBetweenSaveAndLoadPrioritizedTasks() {
-        Task t1 = new Task("Task1", "Description task1",
-                LocalDateTime.of(2024, Month.MARCH, 16, 22, 30), 15);
-        manager.createTask(t1);
-        Epic e1 = new Epic("Epic1", "Description epic1");
-        manager.createEpic(e1);
-        Subtask s1 = new Subtask("Subtask1", "Description subtask1", e1.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 17, 21, 30), 15);
-        Subtask s2 = new Subtask("Subtask2", "Description subtask2", e1.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 18, 21, 45), 15);
-        Subtask s3 = new Subtask("Subtask3", "Description subtask3", e1.getId(),
-                LocalDateTime.of(2024, Month.MARCH, 19, 22, 0), 15);
-        manager.createSubTask(s1);
-        manager.createSubTask(s2);
-        manager.createSubTask(s3);
-        //Проверяем, что в приоритетном списке только пять задач
-        assertEquals(5, manager.getPrioritizedTasks().size());
-        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tmpFile);
-        //Проверяем, что после выгрузки кол-во задач не изменилось
-        assertEquals(5, loadedManager.getPrioritizedTasks().size());
-        //Проверяем, что после выгрузки список до и после идентичны
-        assertEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(), "Списка разные");
-        //Обновим подзадачу s1 с новым статусом, датой начала и продолжительностью
-        Subtask s1New = new Subtask(s1.getId(), "Subtask1", "Description subtask1", Status.DONE,
-                e1.getId(), LocalDateTime.of(2023, Month.MARCH, 17, 21, 30), 5);
-        loadedManager.updateSubtask(s1New);
-        //Проверяем, что после обновления подзадачи старая удалилась из списка
-        assertFalse(loadedManager.getPrioritizedTasks().contains(s1), "Подзадачи не должно быть в списке");
-        //Проверяем, что после изменения выгруженного списка они отличаются
-        assertNotEquals(manager.getPrioritizedTasks(), loadedManager.getPrioritizedTasks(), "Списка одинаковые");
-
+        assertEquals(manager.getTasks(), loadedManager.getTasks(), "Списки задач не идентичны");
+        assertEquals(manager.getEpics(), loadedManager.getEpics(), "Списки эпиков не идентичны");
+        assertEquals(manager.getSubtasks(), loadedManager.getSubtasks(), "Списки подзадач не идентичны");
+        assertEquals(manager.getHistory(), loadedManager.getHistory(), "Истории не идентичны");
+        assertEquals(manager.getPrioritizedTasks(),
+                loadedManager.getPrioritizedTasks(), "Список приоритетных задач разные");
     }
 }

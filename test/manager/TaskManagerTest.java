@@ -6,7 +6,6 @@ import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
 
-import java.io.File;
 import java.time.LocalDateTime;
 import java.time.Month;
 
@@ -19,7 +18,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected T manager;
     Epic epic;
     Subtask subtask;
-    File file;
 
     //проверка, что Subtask нельзя обновить с несуществующим ID и ID несущ. эпика
     @Test

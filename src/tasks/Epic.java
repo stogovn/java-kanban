@@ -14,6 +14,7 @@ public class Epic extends Task {
         idSubtasks = new ArrayList<>();
     }
 
+    @Override
     public TypesTask getType() {
         return TypesTask.EPIC;
     }
@@ -48,7 +49,7 @@ public class Epic extends Task {
                 getStatus() + "," +
                 getDescription() + "," +
                 formattedDateTime + "," +
-                getDuration().toMinutes();
+                getDuration();
     }
 
 }

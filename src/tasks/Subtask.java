@@ -24,6 +24,7 @@ public class Subtask extends Task {
         this.idFromEpic = idFromEpic;
     }
 
+    @Override
     public TypesTask getType() {
         return TypesTask.SUBTASK;
     }
@@ -50,7 +51,7 @@ public class Subtask extends Task {
                 getStatus() + "," +
                 getDescription() + "," +
                 formattedDateTime + "," +
-                getDuration().toMinutes() + "," +
+                getDuration() + "," +
                 getIdFromEpic();
     }
 
