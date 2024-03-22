@@ -4,8 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Task;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InMemoryHistoryManagerTest {
     HistoryManager historyManager;
@@ -85,8 +88,25 @@ class InMemoryHistoryManagerTest {
         assertEquals(t4, newTail);
 
     }
+
     //Добавим метод поиска элемента для теста
-    public boolean searchTask (Task task){
+    public boolean searchTask(Task task) {
         return historyManager.getHistory().contains(task);
+    }
+
+    //Проверка, что история задач пустая
+    @Test
+    public void shouldBeEmptyHistory() {
+        List<Task> history = historyManager.getHistory();
+        assertTrue(history.isEmpty(), "История не пустая");
+    }
+
+    //Проверка, что история не хранит дубликаты
+    @Test
+    public void shouldNotBeDuplicateInHistory() {
+        historyManager.add(task);
+        historyManager.add(task);
+        List<Task> history = historyManager.getHistory();
+        assertEquals(1, history.size(), "В историю добавился дубликат");
     }
 }

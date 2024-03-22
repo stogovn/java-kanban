@@ -1,5 +1,7 @@
 package tasks;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +9,9 @@ public class Task {
     private String description;
     private int id;
     private Status status;
+    private long duration;
+    private LocalDateTime startTime;
+    protected final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
     public Task(String name, String description) {
         this.name = name;
@@ -14,12 +19,40 @@ public class Task {
         this.status = Status.NEW;
     }
 
+    public Task(String name, String description, LocalDateTime startTime, long duration) {
+        this(name, description);
+        this.status = Status.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
     //Конструктор для обновления задачи с верным идентификатором
-    public Task(int id, String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status, LocalDateTime startTime, long duration) {
+        this(name, description);
         this.id = id;
-        this.name = name;
-        this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plusMinutes(duration);
     }
 
     public Status getStatus() {
@@ -33,6 +66,7 @@ public class Task {
     public String getName() {
         return name;
     }
+
     public TypesTask getType() {
         return TypesTask.TASK;
     }
@@ -57,17 +91,18 @@ public class Task {
         this.id = id;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) && status == task.status;
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && status == task.status;
     }
 
     @Override
     public String toString() {
-        return getId()+","+getType()+","+getName()+","+getStatus()+","+getDescription()+",";
+        String formattedDateTime = getStartTime() != null ? getStartTime().format(dateTimeFormatter) : "";
+        return getId() + "," + getType() + "," + getName() + "," + getStatus() + "," + getDescription() + "," + formattedDateTime + "," + getDuration();
     }
 }

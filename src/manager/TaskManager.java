@@ -6,7 +6,9 @@ import tasks.Task;
 
 import java.util.List;
 
-public interface TaskManager{
+public interface TaskManager {
+    List<Task> getPrioritizedTasks();
+
     //Методы для получения списка всех задач:
     List<Task> getTasks();
 
@@ -41,8 +43,6 @@ public interface TaskManager{
     void updateTask(Task task);
 
     void updateSubtask(Subtask subtask);
-
-    void updateEpic(Epic epic);
 
     //Методы для удаления по идентификатору
     void deleteTask(int id);
