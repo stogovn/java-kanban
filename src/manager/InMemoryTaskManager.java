@@ -110,26 +110,27 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Методы для создания задач:
     @Override
-    public void createTask(Task task) {
+    public boolean createTask(Task task) {
         if (prioritizedTasks.stream().anyMatch(t -> timeCrossing(t, task))) {
             System.out.println("Задачи пересекаются, задайте другое время");
-            return;
+            return false;
         }
         counter++;
         task.setId(counter);
         tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
+        return true;
     }
 
     @Override
-    public void createSubTask(Subtask subtask) {
+    public boolean createSubTask(Subtask subtask) {
         if (!epics.containsKey(subtask.getIdFromEpic())) {
-            return;
+            return false;
         }
         Epic epic = epics.get(subtask.getIdFromEpic());
         if (prioritizedTasks.stream().anyMatch(t -> timeCrossing(t, subtask))) {
             System.out.println("Подзадачи пересекаются, задайте другое время");
-            return;
+            return false;
         }
         counter++;
         subtask.setId(counter);
@@ -138,6 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getIdSubtasks().add(subtask.getId());
         updateEpicStatus(epic);
         updateEpicTimeInformation(epic);
+        return true;
     }
 
     @Override

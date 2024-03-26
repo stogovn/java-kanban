@@ -33,9 +33,9 @@ public interface TaskManager {
     Epic getEpicByID(int epicId);
 
     //Методы для создания задач:
-    void createTask(Task task);
+    boolean createTask(Task task);
 
-    void createSubTask(Subtask subtask);
+    boolean createSubTask(Subtask subtask);
 
     void createEpic(Epic epic);
 
