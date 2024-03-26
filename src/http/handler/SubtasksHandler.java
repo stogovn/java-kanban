@@ -7,9 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 import http.HttpTaskServer;
 import manager.TaskManager;
 import tasks.Subtask;
-import tasks.Task;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.regex.Pattern;
 
