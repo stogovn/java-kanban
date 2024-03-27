@@ -1,25 +1,19 @@
 package http.handler;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import http.HttpTaskServer;
 import manager.TaskManager;
 import tasks.Subtask;
 
 import java.lang.reflect.Type;
 import java.util.regex.Pattern;
 
-public class SubtasksHandler extends Handler implements HttpHandler {
-    private final TaskManager manager;
-    private final Gson gson;
+public class SubtasksHandler extends Handler {
     private final Type typeSubtask = new TypeToken<Subtask>() {
     }.getType();
 
     public SubtasksHandler(TaskManager manager) {
-        this.manager = manager;
-        gson = HttpTaskServer.getGson();
+        super(manager);
     }
 
     @Override

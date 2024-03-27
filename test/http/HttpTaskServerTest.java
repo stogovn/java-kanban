@@ -2,6 +2,7 @@ package http;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import manager.Managers;
 import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,7 @@ class HttpTaskServerTest {
     TaskManager manager;
     private Epic epic;
     private Task task;
+    HttpClient client;
     private Subtask subtask;
     private Gson gson;
     private static final int PORT = 8080;
@@ -36,9 +38,10 @@ class HttpTaskServerTest {
 
     @BeforeEach
     void init() throws IOException {
-        taskServer = new HttpTaskServer();
-        manager = taskServer.getManager();
-        gson = HttpTaskServer.getGson();
+        manager = Managers.getDefault();
+        taskServer = new HttpTaskServer(manager);
+        gson = Managers.getGson();
+        client = HttpClient.newHttpClient();
         epic = new Epic("Test epic name", "Description test epic");
         task = new Task("Test task name", "Description test task",
                 LocalDateTime.now(), 15);
@@ -57,7 +60,6 @@ class HttpTaskServerTest {
         Type epicsType = new TypeToken<List<Epic>>() {
         }.getType();
         manager.createEpic(epic);
-        HttpClient client = HttpClient.newHttpClient();
         //Проверяем получение списка эпиков
         URI urlGetEpic = URI.create("http://localhost:" + PORT + "/epics");
         HttpRequest requestGet = HttpRequest.newBuilder()
@@ -94,17 +96,6 @@ class HttpTaskServerTest {
         final List<Integer> actualEpicSb = gson.fromJson(responseGetEpicSb.body(), new TypeToken<List<Integer>>() {
         }.getType());
         assertEquals(epic.getIdSubtasks(), actualEpicSb, "Список сабтасок не совпадает");
-        //Проверяем получение истории
-        URI urlGetHistory = URI.create("http://localhost:" + PORT + "/history");
-        HttpRequest requestGetHistory = HttpRequest.newBuilder()
-                .uri(urlGetHistory)
-                .GET()
-                .build();
-        HttpResponse<String> responseGetHistory = client.send(requestGetHistory, HttpResponse.BodyHandlers.ofString());
-        assertEquals(200, responseGetHistory.statusCode());
-        final List<Task> actualHistory = gson.fromJson(responseGetHistory.body(), new TypeToken<List<Task>>() {
-        }.getType());
-        assertEquals(manager.getHistory(), actualHistory, "Истории не совпадают");
         //Проверяем получение приоритетного списка
         URI urlGetPriority = URI.create("http://localhost:" + PORT + "/prioritized");
         HttpRequest requestPriority = HttpRequest.newBuilder()
@@ -115,13 +106,12 @@ class HttpTaskServerTest {
         assertEquals(200, responseGetPriority.statusCode());
         final List<Task> actualPriority = gson.fromJson(responseGetPriority.body(), new TypeToken<List<Task>>() {
         }.getType());
-        assertEquals(manager.getPrioritizedTasks(), actualPriority, "Истории не совпадают");
+        assertEquals(manager.getPrioritizedTasks(), actualPriority, "Prioritized списки не совпадают");
     }
 
     @Test
     void shouldBeCorrectPostEpicMethod() throws IOException, InterruptedException {
         String epicJson = gson.toJson(epic);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlPost = URI.create("http://localhost:" + PORT + "/epics");
         HttpRequest requestPostEpic = HttpRequest.newBuilder()
                 .uri(urlPost)
@@ -129,13 +119,15 @@ class HttpTaskServerTest {
                 .build();
         HttpResponse<String> responsePost = client.send(requestPostEpic, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responsePost.statusCode());
+        final Epic actualEpic = gson.fromJson(responsePost.body(), new TypeToken<Epic>() {
+        }.getType());
         assertNotNull(manager.getEpics(), "Эпики не возвращаются");
+        assertEquals(manager.getEpicByID(1), actualEpic, "Эпики не совпадают");
     }
 
     @Test
     void shouldBeCorrectPostTaskMethod() throws IOException, InterruptedException {
         String taskJson = gson.toJson(task);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlPost = URI.create("http://localhost:" + PORT + "/tasks");
         HttpRequest requestPostTask = HttpRequest.newBuilder()
                 .uri(urlPost)
@@ -152,7 +144,6 @@ class HttpTaskServerTest {
         subtask = new Subtask("Name", "Description", epic.getId(),
                 LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
         String subtaskJson = gson.toJson(subtask);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlPost = URI.create("http://localhost:" + PORT + "/subtasks");
         HttpRequest requestPostSubtask = HttpRequest.newBuilder()
                 .uri(urlPost)
@@ -182,7 +173,6 @@ class HttpTaskServerTest {
         subtask = new Subtask("Name", "Description", epic.getId(),
                 LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
         manager.createSubTask(subtask);
-        HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:" + PORT + "/subtasks/1");
         HttpRequest requestGetId = HttpRequest.newBuilder()
                 .uri(url)
@@ -202,7 +192,6 @@ class HttpTaskServerTest {
         Task newTask = new Task(1, "Task Name", "Description task", Status.DONE,
                 LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
         String taskJson = gson.toJson(newTask);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlPost = URI.create("http://localhost:" + PORT + "/tasks/1");
         HttpRequest requestPost = HttpRequest.newBuilder()
                 .uri(urlPost)
@@ -218,7 +207,6 @@ class HttpTaskServerTest {
         Type type = new TypeToken<Task>() {
         }.getType();
         manager.createTask(task);
-        HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:" + PORT + "/tasks/1");
         HttpRequest requestGetId = HttpRequest.newBuilder()
                 .uri(url)
@@ -233,7 +221,6 @@ class HttpTaskServerTest {
     @Test
     void shouldBeCorrectDeleteEpicMethod() throws IOException, InterruptedException {
         manager.createEpic(epic);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlDelete = URI.create("http://localhost:" + PORT + "/epics/1");
         HttpRequest requestDelete = HttpRequest.newBuilder()
                 .uri(urlDelete)
@@ -247,7 +234,6 @@ class HttpTaskServerTest {
     @Test
     void shouldBeCorrectDeleteTaskMethod() throws IOException, InterruptedException {
         manager.createTask(task);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlDelete = URI.create("http://localhost:" + PORT + "/tasks/1");
         HttpRequest requestDelete = HttpRequest.newBuilder()
                 .uri(urlDelete)
@@ -264,7 +250,6 @@ class HttpTaskServerTest {
         subtask = new Subtask("Name", "Description", epic.getId(),
                 LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
         manager.createSubTask(subtask);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlDelete = URI.create("http://localhost:" + PORT + "/subtasks/2");
         HttpRequest requestDelete = HttpRequest.newBuilder()
                 .uri(urlDelete)
@@ -284,7 +269,6 @@ class HttpTaskServerTest {
         Subtask checkSubtask = new Subtask("Name", "Description", epic.getId(),
                 LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
         String subtaskJson = gson.toJson(checkSubtask);
-        HttpClient client = HttpClient.newHttpClient();
         URI urlPost = URI.create("http://localhost:" + PORT + "/subtasks");
         HttpRequest requestPost = HttpRequest.newBuilder()
                 .uri(urlPost)
@@ -292,5 +276,30 @@ class HttpTaskServerTest {
                 .build();
         HttpResponse<String> responsePost = client.send(requestPost, HttpResponse.BodyHandlers.ofString());
         assertEquals(406, responsePost.statusCode());
+    }
+
+    @Test
+    void shouldBeCorrectHistoryAfterUpdate() throws IOException, InterruptedException {
+        manager.createEpic(epic);
+        subtask = new Subtask("Name", "Description", epic.getId(),
+                LocalDateTime.of(2023, Month.MARCH, 20, 21, 30), 15);
+        //Проверяем получение истории
+        URI urlGetHistory = URI.create("http://localhost:" + PORT + "/history");
+        HttpRequest requestGetHistory = HttpRequest.newBuilder()
+                .uri(urlGetHistory)
+                .GET()
+                .build();
+        HttpResponse<String> responseGetHistory = client.send(requestGetHistory, HttpResponse.BodyHandlers.ofString());
+        assertEquals(200, responseGetHistory.statusCode());
+        final List<Task> actualHistoryBefore = gson.fromJson(responseGetHistory.body(), new TypeToken<List<Task>>() {
+        }.getType());
+        assertEquals(manager.getHistory(), actualHistoryBefore, "Истории не совпадают");
+        //Обновляем историю и проверяем
+        manager.createTask(task);
+        assertEquals(200, responseGetHistory.statusCode());
+        final List<Task> actualHistoryAfter = gson.fromJson(responseGetHistory.body(), new TypeToken<List<Task>>() {
+        }.getType());
+        assertEquals(manager.getHistory(), actualHistoryAfter, "Истории не совпадают");
+
     }
 }

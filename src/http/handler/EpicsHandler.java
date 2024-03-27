@@ -1,10 +1,7 @@
 package http.handler;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import http.HttpTaskServer;
 import manager.TaskManager;
 import tasks.Epic;
 
@@ -12,15 +9,12 @@ import java.lang.reflect.Type;
 import java.util.regex.Pattern;
 
 
-public class EpicsHandler extends Handler implements HttpHandler {
-    private final TaskManager manager;
-    private final Gson gson;
+public class EpicsHandler extends Handler {
     private final Type typeEpic = new TypeToken<Epic>() {
     }.getType();
 
     public EpicsHandler(TaskManager manager) {
-        this.manager = manager;
-        gson = HttpTaskServer.getGson();
+        super(manager);
     }
 
     @Override

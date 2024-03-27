@@ -1,7 +1,11 @@
 package http.handler;
 
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import manager.Managers;
+import manager.TaskManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +13,15 @@ import java.io.OutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public class Handler {
+public abstract class Handler implements HttpHandler {
+    protected final TaskManager manager;
+    protected final Gson gson;
+
+    public Handler(TaskManager manager) {
+        this.manager = manager;
+        gson = Managers.getGson();
+    }
+
     protected String readResponse(HttpExchange exchange) throws IOException {
         try (InputStream inputStream = exchange.getRequestBody()) {
             return new String(inputStream.readAllBytes(), UTF_8);
