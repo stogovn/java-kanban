@@ -1,6 +1,7 @@
 package tasks;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -42,6 +43,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         String formattedDateTime = getStartTime() != null ? getStartTime().format(dateTimeFormatter) : "";
         return getId() + "," +
                 getType() + "," +
